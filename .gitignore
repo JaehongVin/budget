@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist
+dev-dist
+.vite
+
+# Testing
+coverage
+playwright-report
+test-results
+blob-report
+.playwright
+
+# Logs
+*-debug.log*
+
+# Misc
+.DS_Store
+*.pem
+
+# AI 하네스 로컬 산출물 (Codex 위임 스펙·결과)
+.claude/tmp
