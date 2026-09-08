@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-//* Stop 훅: 코드 변경을 감지해 검증 서브에이전트를 실행하도록 요청한다.
-//*   .ts 변경          -> code-reviewer
-//*   .tsx/.css 변경    -> code-reviewer + ui-qa (병렬)
+//* Stop 훅: 코드 변경(.ts/.tsx/.css)을 감지해 code-reviewer 를 돌리도록 요청한다.
+//* 브라우저 실측은 하지 않는다 — e2e 는 CI 가 잡는다.
 //*
 //* critical 이 나오면 총괄 에이전트는 직접 고치지 않고 스펙을 써서 Codex 에 위임한다.
 //* 라운드가 올라갈수록 reasoning effort 를 올려 에스컬레이션한다.
@@ -15,7 +14,6 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 const REVIEW_TARGETS = ['*.ts', '*.tsx', '*.css'];
-const UI_EXTENSIONS = ['.tsx', '.css'];
 const MAX_ROUNDS = 4;
 //* 라운드별 Codex 모델·reasoning effort. 안 고쳐질수록 올린다.
 //* Terra 가 두 번 실패하면 Sol 로 갈아탄다 (모델 자체를 바꾸는 에스컬레이션).
@@ -53,15 +51,14 @@ const readMarker = (path) => {
   }
 };
 
-const buildReason = ({ changed, needsUiQa, round, isLastRound }) => {
+const buildReason = ({ changed, round, isLastRound }) => {
   const header =
     round === 1
       ? '코드 변경이 감지되었다. 총괄 에이전트로서 검증을 거쳐야 턴을 끝낼 수 있다.'
       : `${round - 1}차 수정에 대한 재검증이 필요하다.`;
 
-  const reviewStep = needsUiQa
-    ? 'Agent 툴로 "code-reviewer"와 "ui-qa"를 한 메시지에서 병렬로, foreground로(run_in_background: false) 실행하라.'
-    : 'Agent 툴로 subagent_type "code-reviewer"를 foreground로(run_in_background: false) 실행하라.';
+  const reviewStep =
+    'Agent 툴로 subagent_type "code-reviewer"를 foreground로(run_in_background: false) 실행하라.';
 
   const tier =
     TIER_BY_ROUND[round - 1] ?? TIER_BY_ROUND[TIER_BY_ROUND.length - 1];
@@ -74,7 +71,7 @@ const buildReason = ({ changed, needsUiQa, round, isLastRound }) => {
         '그러고도 critical이 남으면 더 반복하지 말고, 남은 문제를 사용자에게 한국어로 보고하고 종료하라.',
       ]
     : [
-        'critical 지적이나 레이아웃 문제가 있으면 절대 네가 직접 Write·Edit 하지 마라. 구현은 Codex 담당이다.',
+        'critical 지적이 있으면 절대 네가 직접 Write·Edit 하지 마라. 구현은 Codex 담당이다.',
         `수정 스펙을 .claude/tmp/ 아래 파일로 쓰고 위임하라: .claude/scripts/codex-run.sh <스펙파일> ${tier.effort} ${tier.model}`,
         '스펙 작성 규칙은 .claude/skills/codex-delegation/SKILL.md 를 따른다.',
         '위임 후 돌아온 diff를 직접 읽어 확인한 뒤 다음 행동을 이어가라.',
@@ -99,10 +96,11 @@ const main = () => {
     process.env.CLAUDE_PROJECT_DIR ??
     git(['rev-parse', '--show-toplevel'], process.cwd()).trim();
 
+  //* trim() 은 안 된다. 첫 줄의 " M path" 앞 공백까지 잘려 파일명이 한 글자 깎인다
   const status = git(
     ['status', '--porcelain', '--', ...REVIEW_TARGETS],
     cwd,
-  ).trim();
+  ).replace(/\n+$/, '');
   if (!status) return;
 
   const changed = status.split('\n').map((line) => line.slice(3));
@@ -136,16 +134,11 @@ const main = () => {
   //* 상한을 넘겼으면 직전 라운드에서 이미 "보고하고 종료" 지시를 내렸으니 더 막지 않는다
   if (round > MAX_ROUNDS) return;
 
-  const needsUiQa = changed.some((file) =>
-    UI_EXTENSIONS.some((ext) => file.endsWith(ext)),
-  );
-
   process.stdout.write(
     JSON.stringify({
       decision: 'block',
       reason: buildReason({
         changed,
-        needsUiQa,
         round,
         isLastRound: round === MAX_ROUNDS,
       }),

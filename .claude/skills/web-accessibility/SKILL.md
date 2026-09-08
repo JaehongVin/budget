@@ -90,4 +90,4 @@ className="outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
 
 ### 확인 방법
 
-UI 변경 후에는 `playwright-qa` 스킬 절차대로 브라우저에서 확인하고, 키보드 Tab 이동만으로 주요 동선이 가능한지 함께 점검한다. Biome 의 a11y 규칙(`pnpm lint`)이 1차 방어선이지만 마크업 구조 문제는 잡지 못한다.
+Biome 의 a11y 규칙(`pnpm lint`)이 1차 방어선이지만 마크업 구조 문제는 잡지 못한다. 키보드 Tab 이동만으로 주요 동선이 가능한지는 `e2e/` 스펙에 고정한다.

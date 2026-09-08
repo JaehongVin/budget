@@ -17,12 +17,17 @@
 #*   gpt-5.6-sol    에스컬레이션. Terra 가 두 번 실패했을 때
 #*   effort 는 low | medium | high | xhigh | max
 #*
+#* 스펙 프리앰블
+#*   .claude/codex-preamble.md 를 스펙 앞에 붙여서 넘긴다. Codex 는 AGENTS.md 는 자동으로
+#*   읽지만 .claude/skills/** 는 안 읽으므로, 스킬 경로를 매번 스펙에 적는 대신 여기서 고정한다.
+#*
 #* 환경 변수
 #*   CODEX_MODEL       기본 모델 (기본값 gpt-5.6-terra). 3번째 인자가 우선한다
 #*   CODEX_SANDBOX     기본 workspace-write
 #*   CODEX_UI          tab | headless (기본 tab). headless 면 탭을 띄우지 않는다
 #*   CODEX_KEEP_TAB    1 이면 성공해도 탭을 닫지 않는다 (기본은 실패 시에만 남긴다)
 #*   CODEX_TIMEOUT_MS  탭 대기 상한 (기본 1800000 = 30분)
+#*   CODEX_NO_PREAMBLE 1 이면 프리앰블 없이 스펙만 넘긴다
 
 set -euo pipefail
 
@@ -54,6 +59,15 @@ LOG="$TMP_DIR/codex-$STAMP.log"
 LAST="$TMP_DIR/codex-$STAMP.last.md"
 STATUS_FILE="$TMP_DIR/codex-$STAMP.status"
 RUNNER="$TMP_DIR/codex-$STAMP.runner.sh"
+PROMPT="$TMP_DIR/codex-$STAMP.prompt.md"
+
+#* 실제로 Codex 에 들어가는 입력. 프리앰블 + 스펙
+PREAMBLE="$PROJECT_DIR/.claude/codex-preamble.md"
+if [ -z "${CODEX_NO_PREAMBLE:-}" ] && [ -f "$PREAMBLE" ]; then
+  cat "$PREAMBLE" "$SPEC" >"$PROMPT"
+else
+  cat "$SPEC" >"$PROMPT"
+fi
 
 #* Orca CLI 위치. /usr/local/bin/orca 심볼릭 링크는 샌드박스에서 못 읽으므로 실경로를 먼저 본다
 find_orca() {
@@ -80,7 +94,7 @@ codex exec \\
   --output-last-message "$LAST" \\
   --color never \\
   --skip-git-repo-check \\
-  - <"$SPEC" 2>&1 | tee "$LOG"
+  - <"$PROMPT" 2>&1 | tee "$LOG"
 echo "\${PIPESTATUS[0]}" >"$STATUS_FILE"
 echo "────────────────────────────────────────────────"
 echo "완료. 종료 코드 \$(cat "$STATUS_FILE")"

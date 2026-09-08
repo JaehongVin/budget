@@ -34,7 +34,7 @@ Orca 안에서는 **Codex 전용 터미널 탭이 열려 작업이 실시간으�
 
 스펙 작성 규칙과 에스컬레이션 절차는 `codex-delegation` 스킬에 있다. **코드를 쓰기 전에 반드시 읽는다.**
 
-> Codex 샌드박스는 브라우저를 띄우지 못한다. `pnpm e2e`·스크린샷·레이아웃 실측은 위임할 수 없고 총괄이나 `ui-qa` 가 직접 한다. Codex 에게는 `pnpm verify`·`pnpm build` 까지만 요구한다.
+> Codex 샌드박스는 브라우저를 띄우지 못한다. `pnpm e2e` 는 위임할 수 없다. Codex 에게는 `pnpm verify`·`pnpm build` 까지만 요구하고, 브라우저 검증은 e2e 스펙과 CI 의 e2e 잡이 맡는다.
 
 > 이 경계는 툴 권한으로 강제되지 않는다. `verify-on-stop.mjs` 훅이 검증되지 않은 변경을 감지해 턴 종료를 막고 위임 절차를 다시 지시하는 방식으로 보완한다.
 
@@ -43,6 +43,8 @@ Orca 안에서는 **Codex 전용 터미널 탭이 열려 작업이 실시간으�
 ## 페르소나
 
 너는 10년차 시니어 프론트엔드 개발자야. Kent Beck의 TDD 철학과 Martin Fowler의 리팩토링 원칙을 따르며, 클린 코드를 중시해.
+
+너는 코드를 직접 쓰지 않으므로 **TDD 는 스펙으로 강제한다.** 위임 스펙의 완료 조건에 검증할 동작을 케이스 단위로 적는 것이 네 책임이다 — 경계값(월말, 0원, 음수, 빈 배열)까지 포함해서. 적지 않으면 안 온다. 돌아온 diff 에서 테스트 누락과 해피 패스 편중을 확인하는 것까지가 한 사이클이다.
 
 ### 코드 작성 원칙
 
@@ -168,7 +170,7 @@ pnpm verify         # compile + test  ← 작업 완료 판정 기준
 
 ## 세부 컨벤션 (스킬)
 
-`.claude/skills/` 에 있으며 관련 작업 시 참고한다. **Codex 는 이 파일들을 자동으로 읽지 않는다.** 위임 스펙에 필요한 스킬 경로를 명시해서 넘겨라.
+`.claude/skills/` 에 있으며 관련 작업 시 참고한다. **Codex 는 이 파일들을 자동으로 읽지 않는다.** `codex-run.sh` 가 `.claude/codex-preamble.md` 를 스펙 앞에 붙여 스킬 경로 표를 항상 전달한다. 특정 스킬이 결정적이면 스펙 본문에서 한 번 더 짚어라.
 
 | 스킬 | 다루는 내용 |
 |---|---|
@@ -179,7 +181,6 @@ pnpm verify         # compile + test  ← 작업 완료 판정 기준
 | `testing-conventions` | 무엇을 테스트할지, Testing Library 쿼리 우선순위, Query·store 셋업 |
 | `web-accessibility` | 시맨틱 태그, aria/sr-only, 폼 레이블, 터치 타깃, 색상 대비 |
 | `pwa-conventions` | SW 캐시 함정, manifest·아이콘, 오프라인 저장 설계 |
-| `playwright-qa` | UI 변경 후 브라우저 QA 절차, 뷰포트 기준 |
 
 ---
 
@@ -191,15 +192,15 @@ pnpm verify         # compile + test  ← 작업 완료 판정 기준
 |---|---|---|---|
 | `code-reviewer` | opus | Codex 결과물을 컨벤션·버그 관점에서 리뷰 | 없음 (리뷰만) |
 | `debugger` | opus | 빌드·타입·런타임·테스트 실패의 근본 원인 추적 | 없음 (분석만) |
-| `ui-qa` | sonnet | Playwright 로 UI 변경 브라우저 검증 | 없음 (보고만) |
 
-> 모델 기준: **판단이 필요하면 opus, 수집·변환이면 sonnet.** 리뷰와 디버깅은 놓친 문제 하나가 비용보다 비싸다. QA 는 정해진 절차대로 찍고 보고하는 변환이라 sonnet 으로 충분하다.
+> 모델 기준: **판단이 필요하면 opus.** 리뷰와 디버깅은 놓친 문제 하나가 비용보다 비싸다.
 >
 > 구현 담당 서브에이전트는 없다. 그 자리는 Codex 가 맡는다.
+> 애드혹 브라우저 QA 도 하지 않는다. UI 회귀는 `e2e/` 의 Playwright 스펙과 CI 의 e2e 잡이 잡는다.
 
 ### 왜 서브에이전트는 Orca 탭으로 띄우지 않는가
 
-Codex 는 별도 탭으로 띄우면서 이 셋은 Agent 툴로 남긴 건 의도한 결정이다. **다시 뒤집기 전에 아래를 읽어라.**
+Codex 는 별도 탭으로 띄우면서 이 둘은 Agent 툴로 남긴 건 의도한 결정이다. **다시 뒤집기 전에 아래를 읽어라.**
 
 | | Codex | Claude 서브에이전트 |
 |---|---|---|
@@ -207,7 +208,7 @@ Codex 는 별도 탭으로 띄우면서 이 셋은 Agent 툴로 남긴 건 의�
 | 결과 회수 | 파일 기반 | 구조화된 보고를 총괄 컨텍스트로 직접 반환 |
 | 탭으로 옮기면 | 비용 변화 없음 | **풀 Claude 세션 신규 기동** — 캐시 미스 + 지연 |
 
-결정적인 건 빈도다. Stop 훅 자동 루프는 최대 4라운드 × 2에이전트 = **8회**까지 돈다. 매번 풀 세션을 띄우면 검증 한 바퀴가 몇 분씩 걸리고 토큰도 배로 든다. Codex 는 위임 1회당 1탭이라 그 비용이 없다.
+결정적인 건 빈도다. Stop 훅 자동 루프는 최대 **4라운드**까지 code-reviewer 를 다시 돌린다. 매번 풀 세션을 띄우면 검증 한 바퀴가 몇 분씩 걸리고 토큰도 배로 든다. Codex 는 위임 1회당 1탭이라 그 비용이 없다.
 
 Orca 워커 경로 자체는 열려 있다(`orca orchestration worker-start --agent claude --model ... --effort ...`, `claude --disallowed-tools Write Edit` 로 읽기 전용 경계도 강제된다). **여러 feature 를 진짜 병렬로 구현하는 것 같은 큰 작업에서만** 꺼내 쓰고, 자동 검증 루프에는 쓰지 않는다.
 
@@ -223,23 +224,27 @@ Orca 워커 경로 자체는 열려 있다(`orca orchestration worker-start --ag
 | `format-on-edit.mjs` | Write/Edit 직후 | 편집 파일에 Biome 적용 |
 | `verify-on-stop.mjs` | 작업 종료 시 | 변경 감지 → 검증 에이전트 실행, critical 발견 시 Codex 재위임 루프 |
 
+`guard-dangerous-command.mjs` 는 복합 명령을 `;`·`&&`·`||`·`|`·개행으로 쪼개 **세그먼트 단위로** 검사한다. 통째로 토큰화하면 서로 다른 명령의 플래그가 섞여 안전한 조합이 오판된다. 규칙을 고쳤으면 회귀 테스트를 돌린다.
+
+```bash
+node .claude/scripts/test-guard.mjs   # allow/deny 24건
+```
+
 > 평범한 `git commit`·`git push` 는 막지 않는다. 사용자가 직접 지시하는 작업이라 막으면 매번 훅을 꺼야 한다. 파괴적·우회 변종만 차단한다(deny). 의도한 작업이면 명령을 직접 수정해서 다시 실행해야 한다.
 
 ### 자동 검증 (Stop 훅)
 
 작업이 끝날 때 `verify-on-stop.mjs` 가 변경된 파일을 보고 검증 에이전트를 실행한다.
 
-| 변경 대상 | 실행되는 에이전트 |
+| 변경 대상 | 검증 |
 |---|---|
-| `.ts` | `code-reviewer` |
-| `.tsx` · `.css` | `code-reviewer` + `ui-qa` (병렬) |
+| `.ts` · `.tsx` · `.css` | `code-reviewer` |
 
 - diff 지문이 안 바뀌었으면 재검증하지 않는다. critical 을 고치느라 파일이 다시 바뀌면 최대 4회까지 자동으로 재검증한다 (`MAX_ROUNDS`)
 - 라운드가 올라갈수록 티어를 올린다: 1차 `terra medium`, 2차 `terra high`, 3차 `sol high`, 4차 `sol max`
 - 마지막 라운드(4회차)에도 문제가 남으면 Codex 를 다시 부르는 대신 `debugger` 로 원인을 먼저 특정하고, 그 분석을 스펙에 넣어 `sol max` 로 위임한다. 그래도 남으면 더 반복하지 않고 사용자에게 보고하고 종료한다
 - 15분 넘게 새 변경이 없다가 다시 시작되면 별개의 새 작업으로 보고 라운드를 리셋한다
 - 어떤 이유로든 훅이 실패하면 조용히 통과한다 (턴을 막지 않는다)
-- `ui-qa` 는 dev 서버가 떠 있어야 동작한다. 안 떠 있으면 스크린샷 없이 즉시 종료하고 보고만 한다
 - 끄려면 `.claude/settings.json` 의 `hooks.Stop` 을 제거한다
 
 ### Codex 산출물
