@@ -1,0 +1,96 @@
+/*
+ * Tailwind 테마 — Semantic 토큰만 유틸리티로 노출한다.
+ * Tailwind 기본 팔레트·글자 크기·라운드는 지우고 DS 값만 남긴다. DS 밖의 값은 클래스 자체가 없다.
+ */
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: var(--white);
+
+  /* Surface */
+  --color-background: var(--gray-50);
+  --color-surface: var(--white);
+  --color-surface-subtle: var(--gray-100);
+  --color-border: var(--gray-200);
+  --color-disabled: var(--gray-200);
+
+  /* Content */
+  --color-content-primary: var(--gray-900);
+  --color-content-secondary: var(--gray-600);
+  --color-content-muted: var(--gray-400);
+  --color-content-on-accent: var(--white);
+
+  /* Action */
+  --color-accent: var(--blue-500);
+  --color-accent-pressed: var(--blue-600);
+  --color-accent-subtle: var(--blue-50);
+
+  /* Amount — 입금/지출은 색만으로 구분하지 않고 +/− 기호를 함께 쓴다 */
+  --color-income: var(--blue-600);
+  --color-expense: var(--gray-800);
+
+  /* Feedback */
+  --color-negative: var(--red-500);
+  --color-negative-subtle: var(--red-50);
+  --color-positive: var(--green-600);
+  --color-positive-subtle: var(--green-50);
+
+  /* Spacing — 1 단위 = 1px. p-16 은 16px 이다 (Figma 수치 그대로) */
+  --spacing: 0.0625rem;
+
+  /* Radius */
+  --radius-*: initial;
+  --radius-3: 0.1875rem;
+  --radius-8: 0.5rem;
+  --radius-12: 0.75rem;
+  --radius-14: 0.875rem;
+  --radius-16: 1rem;
+  --radius-18: 1.125rem;
+  --radius-20: 1.25rem;
+
+  /* Typography — 모든 스타일이 행간 1.45, 자간 −0.3px. 굵기는 font-medium(500) / font-bold(700) */
+  --font-*: initial;
+  --font-sans: "Noto Sans KR Variable", system-ui, sans-serif;
+
+  --text-*: initial;
+  --text-8: 0.5rem;
+  --text-8--line-height: 1.45;
+  --text-8--letter-spacing: -0.3px;
+  --text-10: 0.625rem;
+  --text-10--line-height: 1.45;
+  --text-10--letter-spacing: -0.3px;
+  --text-11: 0.6875rem;
+  --text-11--line-height: 1.45;
+  --text-11--letter-spacing: -0.3px;
+  --text-12: 0.75rem;
+  --text-12--line-height: 1.45;
+  --text-12--letter-spacing: -0.3px;
+  --text-13: 0.8125rem;
+  --text-13--line-height: 1.45;
+  --text-13--letter-spacing: -0.3px;
+  --text-15: 0.9375rem;
+  --text-15--line-height: 1.45;
+  --text-15--letter-spacing: -0.3px;
+  --text-18: 1.125rem;
+  --text-18--line-height: 1.45;
+  --text-18--letter-spacing: -0.3px;
+  --text-20: 1.25rem;
+  --text-20--line-height: 1.45;
+  --text-20--letter-spacing: -0.3px;
+  --text-24: 1.5rem;
+  --text-24--line-height: 1.45;
+  --text-24--letter-spacing: -0.3px;
+  --text-28: 1.75rem;
+  --text-28--line-height: 1.45;
+  --text-28--letter-spacing: -0.3px;
+  --text-32: 2rem;
+  --text-32--line-height: 1.45;
+  --text-32--letter-spacing: -0.3px;
+}
+
+@layer base {
+  body {
+    @apply bg-background font-sans text-content-primary antialiased;
+  }
+}

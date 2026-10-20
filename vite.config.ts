@@ -30,6 +30,23 @@ export default defineConfig({
           },
         ],
       },
+      workbox: {
+        //* Noto Sans KR 은 유니코드 범위별 woff2 124개(3.6MB)라 precache 하지 않는다.
+        //* 실제로 쓰인 조각만 처음 받을 때 캐시해서 오프라인에서도 쓴다
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.destination === 'font',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'fonts',
+              expiration: {
+                maxEntries: 150,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+            },
+          },
+        ],
+      },
     }),
   ],
   resolve: {

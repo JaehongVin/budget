@@ -1,0 +1,25 @@
+/*
+ * Primitive 토큰 — Figma "가계부 디자인 시스템" (3:3079) 의 Color 섹션.
+ * 컴포넌트에서 직접 쓰지 않는다. theme.css 의 Semantic 토큰이 이 값을 참조한다.
+ */
+:root {
+  --white: #ffffff;
+
+  --gray-50: #f7f8fa;
+  --gray-100: #f2f4f6;
+  --gray-200: #e5e8eb;
+  --gray-400: #8b95a1;
+  --gray-600: #6b7684;
+  --gray-800: #333d4b;
+  --gray-900: #191f28;
+
+  --blue-50: #eaf2ff;
+  --blue-500: #3182f6;
+  --blue-600: #1b64da;
+
+  --red-50: #fff0f0;
+  --red-500: #e65353;
+
+  --green-50: #eaf8f1;
+  --green-600: #19805a;
+}

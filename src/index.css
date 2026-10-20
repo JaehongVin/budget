@@ -1,1 +1,4 @@
 @import "tailwindcss";
+@import "@fontsource-variable/noto-sans-kr";
+@import "./styles/tokens.css";
+@import "./styles/theme.css";
