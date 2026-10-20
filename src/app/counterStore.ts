@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
-type CounterState = {
+interface CounterState {
   count: number;
   increment: () => void;
   reset: () => void;
-};
+}
 
 export const useCounterStore = create<CounterState>()((set) => ({
   count: 0,

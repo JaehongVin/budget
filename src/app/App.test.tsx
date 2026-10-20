@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { App } from './App';
-import { useCounterStore } from './counter-store';
+import { useCounterStore } from './counterStore';
 
 describe('App', () => {
   beforeEach(() => {
