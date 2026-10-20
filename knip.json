@@ -1,5 +1,14 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "project": ["src/**/*.{ts,tsx,css}", "e2e/**/*.ts"],
+  "ignore": [
+    "src/components/molecules/IncomeExpenseSummary.tsx",
+    "src/components/molecules/TransactionRow.tsx"
+  ],
+  "ignoreIssues": {
+    "src/lib/budget.ts": ["exports"],
+    "src/lib/date.ts": ["exports"],
+    "src/mocks/transactions.ts": ["exports"]
+  },
   "ignoreDependencies": ["zustand"]
 }

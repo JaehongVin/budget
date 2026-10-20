@@ -7,27 +7,28 @@ description: 새 컴포넌트·훅·스토어·타입·로직 파일을 어디�
 
 ```
 src/
-├── app/              # 앱 전역 (App.tsx, providers.tsx)
+├── app/              # 앱 전역 (App.tsx, providers.tsx, router.tsx, searchSchemas.ts)
 ├── components/       # UI 전부. 아토믹 디자인
 │   ├── atoms/
 │   ├── molecules/
-│   └── organisms/
-├── lib/              # 순수 로직 (포맷, 계산, cn)
+│   ├── organisms/
+│   └── templates/
+├── pages/            # 라우트 화면 (HomePage, CalendarPage, HistoryPage)
+├── queries/          # TanStack Query (transactionQueries.ts)
+├── mocks/            # 목 데이터 (transactions.ts)
+├── lib/              # 순수 로직 (포맷, 날짜, 집계, 카테고리 아이콘, cn)
 ├── styles/           # 디자인 토큰 (tokens.css, theme.css)
 ├── types/            # 앱 전역 타입
-└── test/             # 테스트 셋업
+└── test/             # 테스트 셋업, renderRoute 헬퍼
 e2e/                  # Playwright 스펙
 ```
 
-아래 폴더는 **처음 필요해질 때** 만든다. 빈 폴더를 미리 만들지 않는다.
+`templates/`·`pages/`·`queries/`·`mocks/` 는 이미 있다. 아래 폴더는 **처음 필요해질 때** 만든다. 빈 폴더를 미리 만들지 않는다.
 
 | 폴더 | 언제 |
 |---|---|
-| `components/templates/` | 화면 골격(헤더 + 본문 + 하단 탭 배치)이 두 화면 이상에서 반복될 때 |
-| `pages/` | 라우터를 붙여 실제 화면을 만들 때. 데이터를 받아 template·organism 에 넘긴다 |
 | `hooks/` | 커스텀 훅 |
 | `stores/` | zustand 스토어 |
-| `queries/` | TanStack Query 의 queryKey 팩토리·queryOptions·mutation (`state-management` 스킬) |
 
 ### 아토믹 분류 기준
 
@@ -36,10 +37,10 @@ e2e/                  # Playwright 스펙
 | 단계 | 기준 | 예 |
 |---|---|---|
 | atoms | 다른 컴포넌트를 쓰지 않는 최소 단위. 더 쪼개면 의미가 없다 | `Button`, `Chip`, `ProgressBar`, `Icon` |
-| molecules | atom 몇 개가 모여 **한 가지 일**을 한다 | `FilterChipGroup`, `TransactionRow`, `CalendarDay`, `BudgetFeedback` |
+| molecules | atom 몇 개가 모여 **한 가지 일**을 한다 | `FilterChipGroup`, `TransactionRow`, `CalendarDay`, `BudgetFeedback`, `ScreenHeader`, `MonthNavigator`, `IncomeExpenseSummary` |
 | organisms | molecule·atom 이 모여 **화면에서 독립된 한 구역**이 된다 | `BudgetProgressCard`, `BottomNav` |
-| templates | 화면 골격. 데이터 없이 배치만 | (아직 없음) |
-| pages | template 에 실제 데이터를 채운 화면 | (아직 없음) |
+| templates | 화면 골격. 데이터 없이 배치만 | `AppShell` (본문 + 하단 탭) |
+| pages | 라우트에 붙는 화면. 데이터를 읽어 molecule·organism 에 넘긴다 | `HomePage`, `CalendarPage`, `HistoryPage` |
 
 헷갈리면 이 순서로 판단한다.
 
@@ -56,7 +57,11 @@ e2e/                  # Playwright 스펙
 
 - 금액 포맷, 예산 사용률, 날짜 계산처럼 규칙이 있는 로직은 `src/lib/` 의 순수 함수로 만들고 단위 테스트를 붙인다
 - 컴포넌트는 그 함수를 호출해 결과를 그리기만 한다 (예: `BudgetProgressCard` 는 `getBudgetUsage` 를 부른다)
-- 앱 전역 타입·상수(`TRANSACTION_TYPE`)는 `src/types/`
+- 앱 전역 타입·상수(`TRANSACTION_TYPE`, `Transaction`, `CATEGORY`)는 `src/types/`
+- 날짜 계산(`date.ts`)·집계(`transactions.ts`)도 lib 다. 날짜는 `YYYY-MM-DD`·`YYYY-MM` 문자열(로컬 타임존)로만 주고받고, `Date` 는 `date.ts` 안에서만 만진다
+- 카테고리 → 아이콘 매핑(`categoryIcon.ts`)은 lucide 컴포넌트를 돌려주는 얇은 룩업이라 lib 에 둔다
+- 라우트는 `app/router.tsx` 에 코드로 정의한다 (파일 기반 라우팅 아님). 페이지는 `useSearch({ from: '/calendar' })` 처럼 경로 문자열로 라우트에 접근하므로 router 를 import 하지 않는다
+- 목 데이터는 `src/mocks/` 의 순수 함수(`createMockTransactions(today)`)다. 컴포넌트는 직접 부르지 않고 `queries/` 를 통해 읽는다
 
 ### import
 

@@ -9,7 +9,7 @@ export interface Summary {
   balance: number;
 }
 
-export interface DailyTotal {
+interface DailyTotal {
   income: number;
   expense: number;
 }
