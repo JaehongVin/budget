@@ -1,10 +1,16 @@
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
+import type { LucideIcon } from 'lucide-react';
 import { Chip } from '@/components/atoms/Chip';
+import { Icon } from '@/components/atoms/Icon';
+
+const ICON_SIZE = 14;
 
 interface FilterChipOption<T extends string> {
   value: T;
   label: string;
   disabled?: boolean;
+  //* 라벨 오른쪽의 장식 아이콘. 접근 가능한 이름에는 들어가지 않는다
+  icon?: LucideIcon;
 }
 
 interface FilterChipGroupProps<T extends string> {
@@ -43,7 +49,10 @@ export const FilterChipGroup = <T extends string>({
         disabled={option.disabled}
         asChild
       >
-        <Chip selected={option.value === value}>{option.label}</Chip>
+        <Chip selected={option.value === value}>
+          {option.label}
+          {option.icon && <Icon icon={option.icon} size={ICON_SIZE} />}
+        </Chip>
       </ToggleGroup.Item>
     ))}
   </ToggleGroup.Root>

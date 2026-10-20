@@ -5,7 +5,7 @@ import { cn } from '@/lib/cn';
 
 //* Figma DS/Filter chip — H36 · Pill · 라벨 13
 const chipVariants = cva(
-  'inline-flex h-36 shrink-0 items-center rounded-full px-15 text-13 transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:bg-surface-subtle disabled:font-medium disabled:text-content-muted',
+  'inline-flex h-36 shrink-0 items-center gap-4 rounded-full px-15 text-13 transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:bg-surface-subtle disabled:font-medium disabled:text-content-muted',
   {
     variants: {
       selected: {

@@ -33,8 +33,8 @@ Tailwind 기본 팔레트·글자 크기·라운드는 `initial` 로 지웠다. 
 ### 간격 · 라운드 · 글자
 
 - **간격**: `--spacing` 이 1px 라서 숫자가 곧 px 이다. `p-16` = 16px, `gap-12` = 12px, `h-52` = 52px. Figma 수치를 그대로 쓴다
-- **라운드**: `rounded-3` `-8` `-12` `-14` `-16` `-18` `-20`, Pill 은 `rounded-full`
-- **글자**: `text-8` `10` `11` `12` `13` `15` `18` `20` `24` `28` `32`. 행간 1.45·자간 −0.3px 가 크기에 포함돼 있다. 굵기는 `font-medium`(500) / `font-bold`(700) 두 가지만 쓴다
+- **라운드**: `rounded-3` `-6` `-8` `-12` `-14` `-16` `-18` `-20`, Pill 은 `rounded-full`
+- **글자**: `text-8` `10` `11` `12` `13` `14` `15` `16` `18` `19` `20` `24` `28` `32`. 행간 1.45·자간 −0.3px 가 크기에 포함돼 있다. 굵기는 `font-medium`(500) / `font-bold`(700) 두 가지만 쓴다
 - **폰트**: Noto Sans KR (`@fontsource-variable/noto-sans-kr`, 직접 호스팅)
 
 ### 컴포넌트
@@ -45,16 +45,30 @@ Tailwind 기본 팔레트·글자 크기·라운드는 `initial` 로 지웠다. 
 |---|---|---|---|
 | `Icon` | atoms | (lucide 아이콘) | `icon`, `size`. 선 굵기 1.8px 고정, 색은 currentColor |
 | `Button` | atoms | DS/Button | `variant: primary \| secondary`. pressed 는 `:active`, disabled 는 `disabled` 속성 |
-| `Chip` | atoms | DS/Filter chip | `selected`, `disabled` |
+| `Chip` | atoms | DS/Filter chip | `selected`, `disabled`. 라벨과 아이콘 사이 간격 4 |
 | `ProgressBar` | atoms | Progress track/fill | `value`(0~100), `label` |
-| `FilterChipGroup` | molecules | Filter chip 묶음 | `options`, `value`, `onValueChange`. Radix ToggleGroup(`radiogroup`). 선택 해제 불가 |
+| `FilterChipGroup` | molecules | Filter chip 묶음 | `options`(`value`, `label`, `disabled?`, `icon?`), `value`, `onValueChange`. Radix ToggleGroup(`radiogroup`). 선택 해제 불가. `icon` 은 라벨 오른쪽 장식 아이콘(14, aria-hidden)이라 접근 가능한 이름에 안 들어간다 |
 | `TransactionRow` | molecules | DS/Transaction row | `type`, `title`, `description`, `amount`, `icon` |
-| `CalendarDay` | molecules | DS/Calendar day | `day`, `income`, `expense`, `selected`, `today`, `outsideMonth`, `onSelect`. 다른 달 날짜도 누를 수 있고, 누르면 **그 달로 이동**한다. 이동은 호출하는 쪽(캘린더 그리드)이 `onSelect` 에서 처리한다 |
+| `TransactionItem` | molecules | (TransactionRow 래퍼) | `transaction`(`Transaction`). `description`(`카테고리 · 결제수단`)과 `getCategoryIcon` 변환을 한곳에 모은 얇은 래퍼. `li` 는 감싸는 쪽이 만든다. 홈·캘린더·내역 목록은 `TransactionRow` 를 직접 쓰지 않고 이걸 쓴다 |
+| `CalendarDay` | molecules | DS/Calendar day | `day`, `dateLabel`(월이 포함된 전체 날짜, 예 `10월 1일 목요일`. 버튼 접근 가능한 이름의 앞부분이라 이웃 달 날짜와 구분된다), `income`, `expense`, `selected`, `today`, `outsideMonth`, `onSelect`. 다른 달 날짜도 누를 수 있고, 누르면 **그 달로 이동**한다. 이동은 호출하는 쪽(캘린더 그리드)이 `onSelect` 에서 처리한다 |
 | `BudgetFeedback` | molecules | DS/Budget feedback | `message`. `role="status"` |
 | `BudgetProgressCard` | organisms | DS/Budget progress card | `title`, `spent`, `limit`. 사용률·남은 금액·초과 여부는 `getBudgetUsage` 로 파생. **예산보다 1원이라도 많이 쓴 경우에만** 초과로 보고 `BudgetFeedback` 을 함께 띄운다. 딱 맞게 쓴 100% 는 초과가 아니다 |
-| `BottomNav` | organisms | DS/Bottom navigation | `active`, `onSelect`. 탭 3개 고정. 라우터 연결 전이라 props 로 제어 |
+| `BottomNav` | organisms | DS/Bottom navigation | props 없음. 탭 3개(`/`, `/calendar`, `/history`) 고정이고 TanStack Router `Link` 다. 현재 경로의 탭에 `aria-current="page"` (`exact`, 쿼리스트링 무시). 렌더하려면 라우터가 필요하다 (`renderRoute`) |
+| `ScreenHeader` | molecules | App header | `title`(h1), `icon`, `iconLabel`(aria-label). 아이콘 버튼은 아직 동작이 없다. H66 · 좌우 24. 아이콘 버튼은 터치 타깃 44 |
+| `MonthNavigator` | molecules | Month controls | `monthKey`(`YYYY-MM`), `onMonthChange`, `children`(오른쪽 슬롯). 이전/다음 달 버튼(aria-label `이전 달`·`다음 달`)이 `shiftMonth` 로 월 키를 만들어 넘긴다 |
+| `IncomeExpenseSummary` | molecules | Monthly totals | `income`, `expense`. 총 입금(파랑 19/700) \| 구분선 \| 총 지출. 홈 카드·캘린더·내역이 같은 수치라 공통이다 |
+| `InsightBanner` | molecules | 홈 Insight banner | `changePercent`(정수 % 또는 `null`). 덜 씀 `accent-subtle` / 더 씀 `negative-subtle` / 같음(0%)·비교 불가(`null`) `surface-subtle`. 더 씀·같음·비교 불가 문구는 Figma 에 없어 앱에서 정했다 |
+| `BalanceCard` | organisms | 홈 Monthly balance card | `monthNumber`, `balance`(음수 가능), `income`, `expense`. ⋯ 버튼(aria-label `더보기`)은 동작 없음 |
+| `RecentTransactions` | organisms | 홈 Recent transactions | `transactions`. "전체 보기"는 `/history` 링크. 비면 "아직 내역이 없어요" |
+| `MonthlySummaryCard` | organisms | 내역 Monthly summary | `income`, `expense`, `balance`(음수 가능, 음수면 `text-negative`). `IncomeExpenseSummary` + 남은 돈 행. 필터와 상관없이 그 달 전체 합계를 넘긴다 |
+| `TransactionGroupList` | organisms | 내역 Transaction list | `groups`(`groupByDate` 결과), `todayKey`, `emptyMessage`. 날짜별 `section`(머리 `h2` "9월 15일 화요일" + 오늘이면 " · 오늘", 건수, 행은 `ul > li`) |
+| `MonthCalendar` | organisms | 캘린더 Month grid | `monthKey`, `selectedDate`, `todayKey`, `dailyTotals`(`getDailyTotals` 결과), `onSelectDate(dateKey)`. 요일 머리 + `getMonthGrid` 그리드를 `table` 로 그리고 칸은 `CalendarDay`. 다른 달 날짜를 누르면 그 날짜 키를 그대로 넘기고, 월 이동은 페이지가 한다 |
+| `DayTransactions` | organisms | 캘린더 Selected day | `dateKey`, `isToday`, `transactions`. 제목 + 오늘 배지 + 건수, 입금·지출 요약, 처음 2건만 보이고 "내역 N건 더 보기"로 펼친다. 비면 "이 날은 내역이 없어요" |
+| `AppShell` | templates | (화면 골격) | `children`. `<main>` + 하단 sticky `BottomNav`, 폭 `max-w-390` |
 
-- 금액 props 는 전부 **원 단위 0 이상 정수**다. 방향(입금/지출)은 `type`·`sign` 으로 넘긴다
+- 금액 props 는 전부 **원 단위 0 이상 정수**다. 방향(입금/지출)은 `type`·`sign` 으로 넘긴다. 남은 돈처럼 음수가 될 수 있는 값은 `formatBalance` 로 포맷한다 (`−292,500원`, 마이너스 기호 U+2212)
+- 캘린더 요일 머리의 일요일 빨강·토요일 파랑은 새 토큰 없이 `text-negative`·`text-income` 이다 (Figma 가 feedback/negative, action/pressed 를 쓴다)
+- 카테고리 아이콘은 `getCategoryIcon(category)` (`src/lib/categoryIcon.ts`)로 얻어 `TransactionRow` 의 `icon` 에 넘긴다 (목록에서는 `TransactionItem` 이 대신 한다)
 - Figma 의 Home indicator 막대(Bottom nav 아래)는 OS 가 그리는 요소라 구현하지 않는다. `env(safe-area-inset-bottom)` 여백으로 대신한다
 - 예산 카드의 "초과" 상태 디자인은 Figma 에 없다. 지금은 경고 컴포넌트를 함께 띄우기만 한다
 
@@ -76,6 +90,6 @@ Tailwind 기본 팔레트·글자 크기·라운드는 `initial` 로 지웠다. 
 2. Primitive 는 `tokens.css`, Semantic 은 `theme.css` 에 추가한다. 컴포넌트 전용 토큰(`button-primary-bg` 같은 3번째 층)은 만들지 않는다
 3. 이 문서의 표를 갱신한다
 
-### 미리보기
+### 확인
 
-`src/app/App.tsx` 가 지금은 DS 미리보기 화면이다. 컴포넌트를 바꿨으면 `pnpm dev` 로 띄워 390px 폭에서 Figma 와 비교한다. 실제 화면이 생기면 이 미리보기는 지운다.
+DS 미리보기 화면은 실제 화면으로 대체돼 없다. 컴포넌트를 바꿨으면 `pnpm dev` 로 화면에 띄워 390px 폭에서 Figma 와 비교한다.

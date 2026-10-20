@@ -15,9 +15,13 @@ description: zustand 와 TanStack Query 의 역할 경계, queryKey 설계, quer
 
 zustand 에는 "무엇을 보여줄지"만 담는다. 예: `selectedMonth` 는 zustand, 그 달의 거래 목록은 Query.
 
+> 이 앱에서 **선택된 월·날짜·종류 필터는 URL search params** 가 진실 원천이다 (`/calendar?month=&date=`, `/history?month=&type=`, `app/searchSchemas.ts` 의 zod 스키마로 검증). 뒤로가기·새로고침·공유가 되고 zustand 와 중복되지 않는다. 잘못된 값은 버려져 `undefined` 가 되며, 기본값(이번 달·오늘·`all`)은 각 화면이 채운다. 새 zustand 스토어를 만들기 전에 URL 로 풀 수 있는지 먼저 본다.
+
 ### TanStack Query
 
 #### queryOptions 로 정의를 한곳에 모은다
+
+현재 쿼리는 `src/queries/transactionQueries.ts` 의 `transactionsQuery()` 하나다. 거래 전체(이번 달 + 비교용 지난달)를 목 데이터로 돌려주고, 월·종류 필터와 집계는 화면에서 `src/lib/transactions.ts` 로 한다. queryFn 이 오늘 날짜를 쓰므로 queryKey 에 오늘(`YYYY-MM-DD`)이 들어간다. 아래는 월 단위로 나눌 때의 일반 패턴이다.
 
 ```typescript
 //* src/queries/transactionQueries.ts

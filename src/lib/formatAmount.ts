@@ -26,3 +26,12 @@ export const formatAmount = (
   //* -0 은 가드를 통과하지만 Intl 이 "-0" 으로 찍는다. + 0 으로 0 에 맞춘다
   return `${symbol}${numberFormat.format(amount + 0)}${unit ? '원' : ''}`;
 };
+
+//* 남은 돈은 지출이 입금보다 많으면 음수가 된다. formatAmount 는 음수를 거부하므로 부호만 따로 붙인다
+export const formatBalance = (
+  balance: number,
+  options: { unit?: boolean } = {},
+) => {
+  const symbol = balance < 0 ? SIGN_SYMBOL[TRANSACTION_TYPE.EXPENSE] : '';
+  return `${symbol}${formatAmount(Math.abs(balance), options)}`;
+};

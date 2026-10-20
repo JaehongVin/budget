@@ -59,6 +59,8 @@
 | 폰트 | @fontsource-variable/noto-sans-kr | 5.3.1 |
 | 클라이언트 상태 | Zustand | 5.0.15 |
 | 서버 상태 | TanStack Query | 5.104.5 |
+| 라우팅 | TanStack Router (코드 기반 라우트) | 1.170.45 |
+| 스키마 검증 | zod (search params 검증) | 4.6.7 |
 | PWA | vite-plugin-pwa | 2.0.0 |
 | Linter/Formatter | Biome | 2.5.15 |
 | 단위 테스트 | Vitest (jsdom, Testing Library) | 5.0.5 |
@@ -77,12 +79,15 @@
 ```
 budget/
 ├── src/
-│   ├── app/          # 앱 전역 (App, providers). App 은 지금 DS 미리보기 화면
-│   ├── components/   # UI. 아토믹 디자인 (atoms / molecules / organisms)
-│   ├── lib/          # 순수 로직 (cn, 금액 포맷, 예산 계산)
+│   ├── app/          # 앱 전역 (App, providers, router, search params 스키마)
+│   ├── components/   # UI. 아토믹 디자인 (atoms / molecules / organisms / templates)
+│   ├── pages/        # 라우트 화면 (홈·캘린더·내역)
+│   ├── queries/      # TanStack Query queryKey·queryOptions
+│   ├── mocks/        # 목 데이터 (오늘 기준으로 만드는 순수 함수)
+│   ├── lib/          # 순수 로직 (cn, 금액 포맷, 날짜, 집계, 예산 계산)
 │   ├── styles/       # tokens.css (primitive) + theme.css (Tailwind semantic)
 │   ├── types/        # 앱 전역 타입
-│   └── test/         # 테스트 셋업
+│   └── test/         # 테스트 셋업, renderRoute 헬퍼
 ├── e2e/              # Playwright 스펙
 ├── public/           # PWA 아이콘, favicon
 └── .claude/          # 하네스 (스킬은 Codex 와 공유)

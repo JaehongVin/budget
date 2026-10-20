@@ -23,3 +23,13 @@ describe('cn', () => {
     expect(cn('p-16', false, undefined, 'gap-8')).toBe('p-16 gap-8');
   });
 });
+
+describe('cn — 화면용 토큰', () => {
+  it('text-19 와 글자 색을 둘 다 남긴다', () => {
+    expect(cn('text-19', 'text-income')).toBe('text-19 text-income');
+  });
+
+  it('rounded-6 이 다른 라운드와 겹치면 뒤에 온 것만 남긴다', () => {
+    expect(cn('rounded-6', 'rounded-8')).toBe('rounded-8');
+  });
+});

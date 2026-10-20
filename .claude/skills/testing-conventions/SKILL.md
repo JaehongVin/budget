@@ -84,7 +84,16 @@ const renderWithQuery = (ui: ReactNode) => {
 };
 ```
 
-이 헬퍼가 두 군데 이상에서 필요해지면 `src/test/` 로 올린다.
+페이지·라우트가 얽힌 테스트는 `src/test/renderRoute.tsx` 의 `renderRoute` 를 쓴다. 메모리 history 로 경로를 지정해 앱 전체(레이아웃 + 하단 탭 + 페이지)를 새 QueryClient 와 함께 렌더한다.
+
+```tsx
+const { router, queryClient } = await renderRoute('/calendar?month=2026-09');
+expect(await screen.findByRole('heading', { name: '캘린더' })).toBeInTheDocument();
+```
+
+- 라우트 매칭이 비동기라 `await renderRoute(...)` 후에도 화면은 `findBy*` 로 기다린다
+- `{ transactions }` 를 넘기면 목 데이터 대신 그 거래 목록을 쿼리 캐시에 넣는다. 오늘 날짜에 의존하는 단언은 `vi.useFakeTimers({ now, toFake: ['Date'] })` 로 시각을 고정한다 (`toFake` 를 `Date` 로 좁혀야 `findBy*` 가 멈추지 않는다)
+- 라우터가 필요 없는 컴포넌트는 위의 `renderWithQuery` 패턴을 그대로 쓴다. 이 헬퍼가 두 군데 이상에서 필요해지면 `src/test/` 로 올린다
 
 #### zustand 스토어가 붙은 컴포넌트
 

@@ -21,3 +21,5 @@ export const getBudgetUsage = (spent: number, limit: number) => {
     isOver: spent > limit,
   };
 };
+
+export const MONTHLY_BUDGET = 2_000_000;
