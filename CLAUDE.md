@@ -256,6 +256,14 @@ pnpm verify
 | `guard-dangerous-command.mjs` | Bash 실행 전 | 위 "금지 명령" 차단 (deny) |
 | `format-on-edit.mjs` | Write/Edit 직후 | 편집 파일에 Biome 적용 |
 
+**MCP** (`.mcp.json`, project 범위)
+
+| 서버 | 용도 | 인증 |
+|---|---|---|
+| `figma` | Figma 디자인 조회 (노드 구조·스타일·변수·스크린샷) | OAuth. 사람마다 `/mcp` 에서 직접 로그인. 토큰은 저장소에 남지 않는다 |
+
+Figma 링크를 받으면 URL 의 `node-id` 를 쓴다 (`0-1` → 노드 `0:1`). Codex 는 `.mcp.json` 을 읽지 않는다. Codex 에서 쓰려면 Codex 설정에 따로 등록해야 한다.
+
 `guard-dangerous-command.mjs` 는 복합 명령을 `;`·`&&`·`||`·`|`·개행으로 쪼개 **세그먼트 단위로** 검사한다. 규칙을 고쳤으면 회귀 테스트를 돌리고, 위 "금지 명령" 목록도 함께 고친다.
 
 ```bash
