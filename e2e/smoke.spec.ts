@@ -26,9 +26,7 @@ test('하단 탭으로 홈·캘린더·내역을 오간다', async ({ page }) =>
   await expect(page.getByRole('heading', { name: '내 가계부' })).toBeVisible();
 });
 
-test('잘못된 search 값은 기본값으로 떨어져 화면이 깨지지 않는다', async ({
-  page,
-}) => {
+test('잘못된 search 값이어도 화면이 깨지지 않는다', async ({ page }) => {
   await page.goto('/calendar?month=2026-13&date=abc');
   await expect(page.getByRole('heading', { name: '캘린더' })).toBeVisible();
 });

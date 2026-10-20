@@ -1,11 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { App } from './App';
+import { AppProviders } from './providers';
 
 describe('App', () => {
   it('홈 화면에서 시작해 탭으로 캘린더와 내역으로 이동한다', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    render(
+      <AppProviders>
+        <App />
+      </AppProviders>,
+    );
 
     expect(
       await screen.findByRole('heading', { name: '내 가계부' }),

@@ -16,6 +16,7 @@ describe('calendarSearchSchema', () => {
     ['없는 달', { month: '2026-13' }],
     ['숫자가 들어온 month', { month: 202609 }],
     ['날짜 형식의 month', { month: '2026-09-01' }],
+    ['0050년 month', { month: '0050-01' }],
   ])('%s 는 버린다', (_, input) => {
     expect(calendarSearchSchema.parse(input).month).toBeUndefined();
   });
@@ -25,6 +26,7 @@ describe('calendarSearchSchema', () => {
     ['형식이 틀린 date', { date: '2026/09/15' }],
     ['월 형식의 date', { date: '2026-09' }],
     ['null', { date: null }],
+    ['0050년 date', { date: '0050-01-01' }],
   ])('%s 는 버린다', (_, input) => {
     expect(calendarSearchSchema.parse(input).date).toBeUndefined();
   });

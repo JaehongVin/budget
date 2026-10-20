@@ -188,6 +188,7 @@ describe('isValidDateKey / isValidMonthKey', () => {
     '20260915',
     '',
     '2026-09',
+    '0050-01-01',
   ])('%s 은 유효하지 않다', (key) => {
     expect(isValidDateKey(key)).toBe(false);
   });
@@ -198,6 +199,10 @@ describe('isValidDateKey / isValidMonthKey', () => {
     expect(isValidMonthKey('2026-13')).toBe(false);
     expect(isValidMonthKey('2026-00')).toBe(false);
     expect(isValidMonthKey('2026-9')).toBe(false);
+    expect(isValidMonthKey('0050-01')).toBe(false);
+    expect(isValidMonthKey('0000-12')).toBe(false);
+    expect(isValidMonthKey('0100-01')).toBe(false);
+    expect(isValidMonthKey('1000-01')).toBe(true);
     expect(isValidMonthKey('2026-09-01')).toBe(false);
   });
 });
@@ -233,5 +238,15 @@ describe('getMonthToDateRange / getPreviousMonthSamePeriod', () => {
       from: '2025-12-01',
       to: '2025-12-10',
     });
+  });
+});
+
+describe('연도 0~99 도 1900 년대로 바뀌지 않는다 (Date.UTC 회피)', () => {
+  it('0100-01 에서 이전 달은 0099-12 다', () => {
+    expect(shiftMonth('0100-01', -1)).toBe('0099-12');
+  });
+
+  it('0100년 1월 그리드는 0100 년 날짜로 채운다', () => {
+    expect(getMonthGrid('0100-01').flat()).toContain('0100-01-31');
   });
 });
