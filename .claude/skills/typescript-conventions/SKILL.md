@@ -94,7 +94,7 @@ type TransactionType = (typeof TRANSACTION_TYPE)[keyof typeof TRANSACTION_TYPE];
 //* 결과: 'income' | 'expense'
 ```
 
-매직 넘버·매직 스트링은 상수로 뽑는다. 사용처가 한 feature 뿐이면 그 feature 폴더 안에 둔다 (`project-structure` 스킬 참고).
+매직 넘버·매직 스트링은 상수로 뽑는다. 한 파일에서만 쓰면 그 파일 안에, 여러 곳에서 쓰면 `src/types/` 나 `src/lib/` 에 둔다 (`project-structure` 스킬 참고).
 
 ### any 금지
 
@@ -109,7 +109,7 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 ```
 
-경로는 `@/` alias 를 쓴다. 같은 feature 안에서만 상대 경로를 허용한다.
+경로는 `@/` alias 를 쓴다. 같은 폴더 안(테스트가 대상 파일을 가져올 때 등)에서만 상대 경로를 허용한다.
 
 ```typescript
 import { AppProviders } from '@/app/providers';    //* ✅ 다른 영역

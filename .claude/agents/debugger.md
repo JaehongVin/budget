@@ -50,7 +50,7 @@ model: opus
 재현: 실행한 명령과 나온 에러
 
 근본 원인
-  src/features/transactions/api/useTransactions.ts:42
+  src/components/molecules/CalendarDay.tsx:42
   왜 이 코드가 이 증상을 만드는지 인과관계를 설명
 
 근거

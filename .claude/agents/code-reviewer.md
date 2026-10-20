@@ -18,6 +18,7 @@ model: opus
    - zustand 스토어 · TanStack Query → `state-management`
    - `*.test.ts(x)` · `e2e/*.spec.ts` → `testing-conventions`
    - JSX 마크업 → `web-accessibility`
+   - className · 토큰 · `src/components/` → `design-system`
    - Service Worker · manifest · 오프라인 → `pwa-conventions`
 3. `.ts`/`.tsx` 변경이 있으면 `pnpm verify`(typecheck + lint + test + knip)를 반드시 돌린다. 코드만 읽어서는 다른 파일과의 상호작용에서 나는 타입 오류를 놓친다. `.css`만 바뀐 경우는 생략해도 된다.
 
@@ -56,7 +57,7 @@ model: opus
 발견한 항목이 있으면 심각도 순으로:
 
 ```
-[Critical] src/features/transactions/ui/TransactionForm.tsx:42
+[Critical] src/components/molecules/TransactionRow.tsx:42
 문제: 무엇이 잘못되었는지 한 문장
 재현: 어떤 입력/상황에서 어떻게 깨지는지
 제안: 구체적인 수정 방향

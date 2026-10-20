@@ -53,6 +53,10 @@
 | UI Library | React | 19.3.1 |
 | Language | TypeScript | 7.0.2 |
 | Styling | Tailwind CSS | 4.3.3 |
+| Variant 관리 | class-variance-authority (+ clsx, tailwind-merge) | 0.7.1 (2.1.1, 3.7.0) |
+| Headless UI | @radix-ui/react-toggle-group | 1.2.1 |
+| 아이콘 | lucide-react | 1.59.0 |
+| 폰트 | @fontsource-variable/noto-sans-kr | 5.3.1 |
 | 클라이언트 상태 | Zustand | 5.0.15 |
 | 서버 상태 | TanStack Query | 5.104.5 |
 | PWA | vite-plugin-pwa | 2.0.0 |
@@ -64,7 +68,7 @@
 | Runtime | Node.js | 24.13.0 |
 
 > Playwright 는 시스템에 설치된 **Google Chrome**(`channel: 'chrome'`)을 쓴다. 이 머신은 macOS 12 라 번들 Chromium 이 배포되지 않는다.
-> Tailwind 는 v4 다. `tailwind.config.js` 가 없고 `src/index.css` 에서 `@theme` 으로 설정한다.
+> Tailwind 는 v4 다. `tailwind.config.js` 가 없고 `src/styles/theme.css` 의 `@theme` 으로 설정한다. 기본 팔레트·글자 크기·라운드는 지웠고 **DS 토큰만** 있다. 간격은 1 = 1px(`p-16` = 16px). 상세는 `design-system` 스킬.
 > TypeScript 는 7 이다. `baseUrl` 이 제거됐고 `enum` 은 `erasableSyntaxOnly` 로 막혀 있다.
 > pnpm 12 는 기본 `minimumReleaseAge` 정책으로 **공개된 지 하루가 안 된 버전을 거부**한다. 설치가 이 사유로 실패하면 정책을 끄지 말고 하루 지난 버전을 쓴다. lockfile 이 정책에 걸리면 `pnpm clean --lockfile -y && pnpm install` 로 다시 푼다.
 
@@ -73,8 +77,11 @@
 ```
 budget/
 ├── src/
-│   ├── app/          # 앱 전역 (App, providers)
-│   ├── features/     # 도메인 단위. 이 앱의 본체 (필요해질 때 만든다)
+│   ├── app/          # 앱 전역 (App, providers). App 은 지금 DS 미리보기 화면
+│   ├── components/   # UI. 아토믹 디자인 (atoms / molecules / organisms)
+│   ├── lib/          # 순수 로직 (cn, 금액 포맷, 예산 계산)
+│   ├── styles/       # tokens.css (primitive) + theme.css (Tailwind semantic)
+│   ├── types/        # 앱 전역 타입
 │   └── test/         # 테스트 셋업
 ├── e2e/              # Playwright 스펙
 ├── public/           # PWA 아이콘, favicon
@@ -151,6 +158,7 @@ pnpm verify
 | `package.json` scripts 추가·변경·삭제 | "주요 명령어" |
 | 검증 흐름 변경 (`verify` 구성, husky, CI) | "작업을 마치기 전에", "코드 품질 4층 구조" |
 | `tsconfig*`·`biome.json` 규칙 변경 | `typescript-conventions` 스킬 |
+| 디자인 토큰(`src/styles/*`) 추가·변경, `src/components/` 추가·변경 | `design-system` 스킬. 글자 크기·라운드 토큰이면 `src/lib/cn.ts` 의 목록도 |
 | `vite.config.ts` 의 `VitePWA`·manifest·아이콘 변경 | `pwa-conventions` 스킬 |
 | `vite.config.ts` 의 `test`, `playwright.config.ts`, `src/test/` 변경 | `testing-conventions` 스킬 |
 | QueryClient 기본값, 상태 관리 패턴 변경 | `state-management` 스킬 |
@@ -201,7 +209,8 @@ pnpm verify
 | 스킬 | 다루는 내용 |
 |---|---|
 | `typescript-conventions` | Arrow Function·타입 추론·interface·상수·TS7 주의사항 |
-| `project-structure` | feature 단위 배치, 공용으로 올리는 기준, 네이밍 |
+| `design-system` | 토큰 이름과 쓰는 법, 컴포넌트 목록과 API, cva·cn 규칙, Figma 대응 |
+| `project-structure` | 아토믹 분류 기준, 로직·타입 배치, 네이밍 |
 | `state-management` | zustand vs TanStack Query 경계, queryKey 설계, selector 구독 |
 | `testing-conventions` | 무엇을 테스트할지, Testing Library 쿼리 우선순위, Query·store 셋업 |
 | `web-accessibility` | 시맨틱 태그, aria/sr-only, 폼 레이블, 터치 타깃, 색상 대비 |

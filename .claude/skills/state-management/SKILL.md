@@ -20,7 +20,7 @@ zustand 에는 "무엇을 보여줄지"만 담는다. 예: `selectedMonth` 는 z
 #### queryOptions 로 정의를 한곳에 모은다
 
 ```typescript
-//* features/transactions/api/transactionQueries.ts
+//* src/queries/transactionQueries.ts
 import { queryOptions } from '@tanstack/react-query';
 
 export const transactionKeys = {
@@ -68,7 +68,7 @@ const { mutate } = useMutation({
 #### 스토어 작성
 
 ```typescript
-//* features/transactions/model/filterStore.ts
+//* src/stores/filterStore.ts
 import { create } from 'zustand';
 
 interface FilterState {

@@ -36,12 +36,22 @@ pnpm dev        # http://localhost:5173
 
 React 19 · TypeScript 7 · Vite 8 · Tailwind CSS 4 · Zustand 5 · TanStack Query 5 · vite-plugin-pwa 2 · Biome 2 · Vitest 5 · Playwright 1 · knip 6
 
+UI: class-variance-authority · Radix (ToggleGroup) · lucide-react · Noto Sans KR
+
+## 디자인 시스템
+
+Figma 의 "가계부 디자인 시스템" 을 옮긴 것이다. 토큰은 `src/styles/`, 컴포넌트는 `src/components/` (아토믹 디자인). Tailwind 기본 팔레트 대신 DS 토큰만 쓰고, 간격은 Figma 수치 그대로(`p-16` = 16px)다. `pnpm dev` 로 띄우면 지금은 DS 미리보기 화면이 나온다.
+
 ## 구조
 
 ```
 src/
-├── app/        # 앱 전역 (App, providers)
-├── test/       # 테스트 셋업
+├── app/          # 앱 전역 (App, providers)
+├── components/   # atoms / molecules / organisms
+├── lib/          # 순수 로직 (금액 포맷, 예산 계산)
+├── styles/       # 디자인 토큰
+├── types/
+├── test/         # 테스트 셋업
 └── main.tsx
 e2e/            # Playwright 스펙
 public/         # PWA 아이콘, favicon

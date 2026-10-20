@@ -77,7 +77,7 @@ description: 시맨틱 태그 선택 기준, 아이콘 버튼·링크의 sr-only
 className="outline-none"
 
 //* ✅ 대체 표시 제공
-className="outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+className="outline-none focus-visible:outline-2 focus-visible:outline-accent"
 ```
 
 - 모달·바텀시트를 직접 만들면 포커스 트랩, ESC 닫기, 열기 전 포커스 복원을 직접 구현해야 한다. 네이티브 `<dialog>` 나 접근성을 자체 처리하는 라이브러리를 쓰는 편이 안전하다
@@ -85,7 +85,7 @@ className="outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
 ### 색상 대비
 
 - 본문 텍스트는 배경 대비 **4.5:1**, 큰 텍스트·UI 경계는 **3:1** 이상 (WCAG AA)
-- `text-zinc-400` 이하의 옅은 회색을 흰 배경 본문에 쓰지 않는다. 보조 텍스트는 `text-zinc-500` 을 하한으로 본다
+- `text-content-muted`(gray400)는 흰 배경에서 대비가 4.5:1 에 못 미친다. 비활성·보조 라벨에만 쓰고, 읽어야 하는 본문 보조 텍스트는 `text-content-secondary`(gray600)를 하한으로 본다
 - **수입/지출을 색상만으로 구분하지 않는다.** 부호(+/−)나 아이콘을 함께 쓴다. 색각 이상 사용자에게 초록/빨강은 구분되지 않는다
 
 ### 확인 방법

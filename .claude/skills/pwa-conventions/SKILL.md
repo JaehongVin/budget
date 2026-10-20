@@ -11,7 +11,8 @@ description: vite-plugin-pwa 설정 구조, Service Worker 캐시로 인한 변�
 |---|---|---|
 | `registerType` | `autoUpdate` | 새 SW 를 감지하면 자동 갱신. 사용자에게 "새로고침" 프롬프트를 띄우지 않는다 |
 | `devOptions` | 미설정 (기본 `enabled: false`) | **dev 서버에서는 SW 가 돌지 않는다.** 캐시가 HMR 을 방해하기 때문 |
-| `workbox` | 미설정 (기본값) | 빌드 산출물 js/css/html 이 precache 된다 |
+| `workbox.globPatterns` | 미설정 (기본값) | 빌드 산출물 js/css/html 이 precache 된다 |
+| `workbox.runtimeCaching` | 폰트 `CacheFirst` (`fonts` 캐시) | Noto Sans KR 은 woff2 124조각·3.6MB 라 precache 하지 않고, 실제로 받은 조각만 캐시해 오프라인에서 쓴다 |
 | `includeAssets` | `favicon.svg` | precache 에 추가로 넣는 정적 파일 |
 
 ### Service Worker 때문에 생기는 문제
