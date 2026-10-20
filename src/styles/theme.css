@@ -42,6 +42,7 @@
   /* Radius */
   --radius-*: initial;
   --radius-3: 0.1875rem;
+  --radius-6: 0.375rem;
   --radius-8: 0.5rem;
   --radius-12: 0.75rem;
   --radius-14: 0.875rem;
@@ -69,12 +70,21 @@
   --text-13: 0.8125rem;
   --text-13--line-height: 1.45;
   --text-13--letter-spacing: -0.3px;
+  --text-14: 0.875rem;
+  --text-14--line-height: 1.45;
+  --text-14--letter-spacing: -0.3px;
   --text-15: 0.9375rem;
   --text-15--line-height: 1.45;
   --text-15--letter-spacing: -0.3px;
+  --text-16: 1rem;
+  --text-16--line-height: 1.45;
+  --text-16--letter-spacing: -0.3px;
   --text-18: 1.125rem;
   --text-18--line-height: 1.45;
   --text-18--letter-spacing: -0.3px;
+  --text-19: 1.1875rem;
+  --text-19--line-height: 1.45;
+  --text-19--letter-spacing: -0.3px;
   --text-20: 1.25rem;
   --text-20--line-height: 1.45;
   --text-20--letter-spacing: -0.3px;
