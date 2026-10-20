@@ -11,7 +11,9 @@ model: opus
 
 ## 리뷰 절차
 
-1. `git diff HEAD` 와 `git status` 로 변경 범위를 먼저 확정한다. 변경되지 않은 파일은 리뷰 대상이 아니다.
+1. 변경 범위를 먼저 확정한다. 변경되지 않은 파일은 리뷰 대상이 아니다.
+   - 리뷰 범위를 지시받았으면(예: `main...feat/screens`) `git diff <범위>` 와 `git log --oneline <범위>` 를 쓴다. 3단계(다중 세션) 작업은 이미 커밋돼 있어서 `git diff HEAD` 가 비어 있다
+   - 지시가 없으면 `git diff HEAD` 와 `git status` 를 쓴다
 2. 변경 파일이 어떤 영역인지 파악하고, 해당하는 `.claude/skills/` 문서를 읽어 판단 기준을 맞춘다.
    - `.ts` / `.tsx` → `typescript-conventions`
    - 새 파일 추가·이동 → `project-structure`

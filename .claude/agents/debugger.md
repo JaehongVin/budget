@@ -22,7 +22,7 @@ model: opus
    pnpm e2e         # Playwright (build + preview 4173)
    ```
 
-2. **변경 이력을 확인한다.** 직전까지 되던 것이라면 원인은 거의 항상 최근 diff 안에 있다.
+2. **변경 이력을 확인한다.** 직전까지 되던 것이라면 원인은 거의 항상 최근 diff 안에 있다. 범위를 지시받았으면(예: `main...feat/screens`) 그 범위의 diff 를 본다. 3단계(다중 세션) 작업은 이미 커밋돼 있어서 `git diff HEAD` 가 비어 있다.
 
    ```bash
    git diff HEAD
