@@ -41,7 +41,7 @@ describe('CalendarPage', () => {
     expect(
       screen.getByRole('button', { name: '내역 2건 더 보기' }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /^15일/ })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: /^9월 15일/ })).toHaveAttribute(
       'aria-pressed',
       'true',
     );
@@ -51,7 +51,7 @@ describe('CalendarPage', () => {
     const user = userEvent.setup();
     const { router } = await renderCalendar();
 
-    await user.click(await screen.findByRole('button', { name: /^14일/ }));
+    await user.click(await screen.findByRole('button', { name: /^9월 14일/ }));
 
     expect(await screen.findByText('9월 14일 월요일')).toBeInTheDocument();
     expect(screen.getByText('이마트')).toBeInTheDocument();
@@ -66,7 +66,9 @@ describe('CalendarPage', () => {
     const user = userEvent.setup();
     await renderCalendar();
 
-    await user.click(await screen.findByRole('button', { name: '16일' }));
+    await user.click(
+      await screen.findByRole('button', { name: '9월 16일 수요일' }),
+    );
 
     expect(
       await screen.findByText('이 날은 내역이 없어요'),
@@ -77,7 +79,9 @@ describe('CalendarPage', () => {
     const user = userEvent.setup();
     const { router } = await renderCalendar();
 
-    await user.click(await screen.findByRole('button', { name: '31일' }));
+    await user.click(
+      await screen.findByRole('button', { name: '8월 31일 월요일' }),
+    );
 
     expect(await screen.findByText('2026년 8월')).toBeInTheDocument();
     expect(screen.getByText('8월 31일 월요일')).toBeInTheDocument();
@@ -138,6 +142,13 @@ describe('CalendarPage', () => {
     await renderCalendar('/calendar?month=2026-08&date=2026-09-15');
 
     expect(await screen.findByText('8월 1일 토요일')).toBeInTheDocument();
+  });
+
+  it('date 만 있으면 그 날짜의 달을 보여주고 그 날짜를 선택한다', async () => {
+    await renderCalendar('/calendar?date=2026-08-05');
+
+    expect(await screen.findByText('2026년 8월')).toBeInTheDocument();
+    expect(screen.getByText('8월 5일 수요일')).toBeInTheDocument();
   });
 
   it('month 만 있고 이번 달이면 오늘을 선택한다', async () => {

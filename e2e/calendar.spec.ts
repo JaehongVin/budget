@@ -13,7 +13,7 @@ test('캘린더가 시안의 합계와 오늘 내역을 보여준다', async ({ 
   await expect(page.getByText('1,577,500원')).toBeVisible();
   await expect(
     page.getByRole('button', {
-      name: '15일, 입금 3,420,000원, 지출 70,500원',
+      name: '9월 15일 화요일, 입금 3,420,000원, 지출 70,500원',
     }),
   ).toBeVisible();
 });
@@ -29,7 +29,7 @@ test('오늘 내역은 2건만 보이고 더 보기로 나머지를 펼친다', 
 });
 
 test('다른 날짜를 누르면 그 날의 내역을 보여준다', async ({ page }) => {
-  await page.getByRole('button', { name: /^14일/ }).click();
+  await page.getByRole('button', { name: /^9월 14일/ }).click();
 
   await expect(page).toHaveURL(/date=2026-09-14/);
   await expect(page.getByText('9월 14일 월요일')).toBeVisible();

@@ -1,5 +1,10 @@
 import type { DateRange } from '@/lib/date';
-import { buildDateKey, getDaysInMonth } from '@/lib/date';
+import {
+  buildDateKey,
+  getDaysInMonth,
+  getMonthToDateRange,
+  getPreviousMonthSamePeriod,
+} from '@/lib/date';
 import type { Transaction, TypeFilter } from '@/types/transaction';
 import { TRANSACTION_TYPE, TYPE_FILTER } from '@/types/transaction';
 
@@ -9,7 +14,7 @@ export interface Summary {
   balance: number;
 }
 
-interface DailyTotal {
+export interface DailyTotal {
   income: number;
   expense: number;
 }
@@ -91,3 +96,16 @@ export const getSpendingChangePercent = (current: number, previous: number) => {
   //* + 0 으로 -0 을 0 에 맞춘다
   return (difference < 0 ? -magnitude : magnitude) + 0;
 };
+
+//* 이번 달 오늘까지 지출이 지난달 같은 기간 대비 몇 % 변했는지. 비교할 수 없으면 null
+export const getMonthToDateSpendingChange = (
+  transactions: Transaction[],
+  todayKey: string,
+) =>
+  getSpendingChangePercent(
+    summarize(filterByDateRange(transactions, getMonthToDateRange(todayKey)))
+      .expense,
+    summarize(
+      filterByDateRange(transactions, getPreviousMonthSamePeriod(todayKey)),
+    ).expense,
+  );

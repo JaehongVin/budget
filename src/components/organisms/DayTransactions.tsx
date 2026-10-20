@@ -1,6 +1,5 @@
 import { useId, useState } from 'react';
-import { TransactionRow } from '@/components/molecules/TransactionRow';
-import { getCategoryIcon } from '@/lib/categoryIcon';
+import { TransactionItem } from '@/components/molecules/TransactionItem';
 import { formatDateLabel } from '@/lib/date';
 import { formatAmount } from '@/lib/formatAmount';
 import { summarize } from '@/lib/transactions';
@@ -71,13 +70,7 @@ export const DayTransactions = ({
           <ul>
             {visibleTransactions.map((transaction) => (
               <li key={transaction.id}>
-                <TransactionRow
-                  type={transaction.type}
-                  title={transaction.title}
-                  description={`${transaction.category} · ${transaction.paymentMethod}`}
-                  amount={transaction.amount}
-                  icon={getCategoryIcon(transaction.category)}
-                />
+                <TransactionItem transaction={transaction} />
               </li>
             ))}
           </ul>

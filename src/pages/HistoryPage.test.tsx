@@ -117,7 +117,7 @@ describe('HistoryPage', () => {
     await renderRoute('/history');
 
     expect(
-      await screen.findByRole('radio', { name: /카테고리/ }),
+      await screen.findByRole('radio', { name: '카테고리' }),
     ).toBeDisabled();
     expect(screen.getByRole('button', { name: '검색' })).toBeInTheDocument();
     expect(

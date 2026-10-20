@@ -9,16 +9,13 @@ import { MONTHLY_BUDGET } from '@/lib/budget';
 import {
   formatDateLabel,
   getMonthNumber,
-  getMonthToDateRange,
-  getPreviousMonthSamePeriod,
   getTodayKey,
   toMonthKey,
 } from '@/lib/date';
 import {
-  filterByDateRange,
   filterByMonth,
+  getMonthToDateSpendingChange,
   getRecentTransactions,
-  getSpendingChangePercent,
   summarize,
 } from '@/lib/transactions';
 import { MOCK_USER_NAME } from '@/mocks/transactions';
@@ -31,16 +28,9 @@ export const HomePage = () => {
   const today = getTodayKey();
   const monthNumber = getMonthNumber(toMonthKey(today));
 
-  const { income, expense, balance } = summarize(
-    filterByMonth(transactions, toMonthKey(today)),
-  );
-  const changePercent = getSpendingChangePercent(
-    summarize(filterByDateRange(transactions, getMonthToDateRange(today)))
-      .expense,
-    summarize(
-      filterByDateRange(transactions, getPreviousMonthSamePeriod(today)),
-    ).expense,
-  );
+  const monthTransactions = filterByMonth(transactions, toMonthKey(today));
+  const { income, expense, balance } = summarize(monthTransactions);
+  const changePercent = getMonthToDateSpendingChange(transactions, today);
 
   return (
     <>
@@ -66,10 +56,7 @@ export const HomePage = () => {
           limit={MONTHLY_BUDGET}
         />
         <RecentTransactions
-          transactions={getRecentTransactions(
-            filterByMonth(transactions, toMonthKey(today)),
-            RECENT_COUNT,
-          )}
+          transactions={getRecentTransactions(monthTransactions, RECENT_COUNT)}
         />
         <InsightBanner changePercent={changePercent} />
       </div>

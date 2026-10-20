@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { Plus, Search, SlidersHorizontal } from 'lucide-react';
+import { ChevronDown, Plus, Search, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
 import { Icon } from '@/components/atoms/Icon';
 import { FilterChipGroup } from '@/components/molecules/FilterChipGroup';
@@ -24,7 +24,12 @@ const FILTER_OPTIONS = [
   { value: TYPE_FILTER.ALL, label: '전체' },
   { value: TYPE_FILTER.INCOME, label: '입금' },
   { value: TYPE_FILTER.EXPENSE, label: '지출' },
-  { value: CATEGORY_CHIP, label: '카테고리⌄', disabled: true },
+  {
+    value: CATEGORY_CHIP,
+    label: '카테고리',
+    icon: ChevronDown,
+    disabled: true,
+  },
 ] as const;
 
 const EMPTY_MONTH_MESSAGE = '이 달에는 내역이 없어요';

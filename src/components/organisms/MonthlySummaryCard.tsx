@@ -1,4 +1,5 @@
 import { IncomeExpenseSummary } from '@/components/molecules/IncomeExpenseSummary';
+import { cn } from '@/lib/cn';
 import { formatBalance } from '@/lib/formatAmount';
 
 interface MonthlySummaryCardProps {
@@ -22,7 +23,12 @@ export const MonthlySummaryCard = ({
     <IncomeExpenseSummary income={income} expense={expense} />
     <dl className="flex justify-between rounded-8 bg-surface-subtle px-12 py-9">
       <dt className="font-medium text-12 text-content-secondary">남은 돈</dt>
-      <dd className="font-bold text-14 text-content-primary">
+      <dd
+        className={cn(
+          'font-bold text-14',
+          balance < 0 ? 'text-negative' : 'text-content-primary',
+        )}
+      >
         {formatBalance(balance)}
       </dd>
     </dl>

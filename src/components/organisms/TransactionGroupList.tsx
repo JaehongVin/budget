@@ -1,5 +1,4 @@
-import { TransactionRow } from '@/components/molecules/TransactionRow';
-import { getCategoryIcon } from '@/lib/categoryIcon';
+import { TransactionItem } from '@/components/molecules/TransactionItem';
 import { formatDateLabel } from '@/lib/date';
 import type { DateGroup } from '@/lib/transactions';
 
@@ -37,27 +36,24 @@ export const TransactionGroupList = ({
             className="flex flex-col gap-2 not-first:pt-15"
           >
             <div className="flex justify-between pb-6">
-              <p
+              <h2
                 id={headingId}
                 className="font-bold text-12 text-content-secondary"
               >
                 {formatDateLabel(date)}
                 {date === todayKey && TODAY_SUFFIX}
-              </p>
+              </h2>
               <p className="font-medium text-11 text-content-muted">
                 {transactions.length}건
               </p>
             </div>
-            {transactions.map((transaction) => (
-              <TransactionRow
-                key={transaction.id}
-                type={transaction.type}
-                title={transaction.title}
-                description={`${transaction.category} · ${transaction.paymentMethod}`}
-                amount={transaction.amount}
-                icon={getCategoryIcon(transaction.category)}
-              />
-            ))}
+            <ul className="flex flex-col gap-2">
+              {transactions.map((transaction) => (
+                <li key={transaction.id}>
+                  <TransactionItem transaction={transaction} />
+                </li>
+              ))}
+            </ul>
           </section>
         );
       })}

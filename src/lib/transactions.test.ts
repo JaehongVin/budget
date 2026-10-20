@@ -4,6 +4,7 @@ import {
   filterByMonth,
   filterByType,
   getDailyTotals,
+  getMonthToDateSpendingChange,
   getRecentTransactions,
   getSpendingChangePercent,
   groupByDate,
@@ -261,5 +262,73 @@ describe('getSpendingChangePercent', () => {
     expect(getSpendingChangePercent(10_005, 10_000)).toBe(0);
     expect(getSpendingChangePercent(1_005, 1_000)).toBe(1);
     expect(getSpendingChangePercent(995, 1_000)).toBe(-1);
+  });
+});
+
+describe('getMonthToDateSpendingChange', () => {
+  const expense = (date: string, amount: number) =>
+    createTransaction({ date, amount });
+
+  it('지난달 같은 기간보다 덜 썼으면 음수 %다', () => {
+    const transactions = [
+      expense('2026-09-10', 800),
+      expense('2026-08-10', 1_000),
+    ];
+
+    expect(getMonthToDateSpendingChange(transactions, '2026-09-15')).toBe(-20);
+  });
+
+  it('지난달 같은 기간보다 더 썼으면 양수 %다', () => {
+    const transactions = [
+      expense('2026-09-10', 1_200),
+      expense('2026-08-10', 1_000),
+    ];
+
+    expect(getMonthToDateSpendingChange(transactions, '2026-09-15')).toBe(20);
+  });
+
+  it('같으면 0 이다', () => {
+    const transactions = [
+      expense('2026-09-10', 1_000),
+      expense('2026-08-10', 1_000),
+    ];
+
+    expect(getMonthToDateSpendingChange(transactions, '2026-09-15')).toBe(0);
+  });
+
+  it('지난달 같은 기간 지출이 0원이면 null 이다', () => {
+    const transactions = [expense('2026-09-10', 1_000)];
+
+    expect(getMonthToDateSpendingChange(transactions, '2026-09-15')).toBeNull();
+  });
+
+  it('지난달 같은 기간 밖의 지출과 입금은 비교에 넣지 않는다', () => {
+    const transactions = [
+      expense('2026-09-10', 1_000),
+      expense('2026-08-10', 1_000),
+      expense('2026-08-20', 9_000),
+      createTransaction({ type: 'income', date: '2026-08-10', amount: 5_000 }),
+    ];
+
+    expect(getMonthToDateSpendingChange(transactions, '2026-09-15')).toBe(0);
+  });
+
+  it('월초 1일은 1일끼리만 비교한다', () => {
+    const transactions = [
+      expense('2026-09-01', 500),
+      expense('2026-08-01', 1_000),
+      expense('2026-08-02', 9_000),
+    ];
+
+    expect(getMonthToDateSpendingChange(transactions, '2026-09-01')).toBe(-50);
+  });
+
+  it('31일에서 지난달이 30일까지면 지난달 말일까지와 비교한다', () => {
+    const transactions = [
+      expense('2026-10-31', 1_000),
+      expense('2026-09-30', 1_000),
+    ];
+
+    expect(getMonthToDateSpendingChange(transactions, '2026-10-31')).toBe(0);
   });
 });

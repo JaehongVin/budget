@@ -1,19 +1,16 @@
 import { CalendarDay } from '@/components/molecules/CalendarDay';
 import { cn } from '@/lib/cn';
 import {
+  formatDateLabel,
   getDayOfMonth,
   getMonthGrid,
   toMonthKey,
   WEEKDAY_LABELS,
 } from '@/lib/date';
+import type { DailyTotal } from '@/lib/transactions';
 
 const SUNDAY_INDEX = 0;
 const SATURDAY_INDEX = 6;
-
-interface DailyTotal {
-  income: number;
-  expense: number;
-}
 
 interface MonthCalendarProps {
   monthKey: string;
@@ -58,6 +55,7 @@ export const MonthCalendar = ({
             <td key={dateKey} className="p-0">
               <CalendarDay
                 day={getDayOfMonth(dateKey)}
+                dateLabel={formatDateLabel(dateKey)}
                 income={dailyTotals[dateKey]?.income}
                 expense={dailyTotals[dateKey]?.expense}
                 selected={dateKey === selectedDate}

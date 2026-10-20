@@ -130,3 +130,26 @@ export const getPreviousMonthSamePeriod = (todayKey: string): DateRange => {
     to: buildDateKey(previousMonth, lastDay),
   };
 };
+
+//* 월을 옮기면 그 달에 오늘이 있을 때 오늘, 없으면 1일을 고른다
+export const getDefaultDateInMonth = (monthKey: string, todayKey: string) =>
+  toMonthKey(todayKey) === monthKey ? todayKey : buildDateKey(monthKey, 1);
+
+interface CalendarSearch {
+  month?: string;
+  date?: string;
+}
+
+//* month 가 우선이고, 없으면 date 의 달, 둘 다 없으면 이번 달.
+//* date 가 표시할 달 밖이면 URL 이 어긋난 것이라 그 달의 기본 날짜로 대신한다
+export const resolveCalendarSelection = (
+  { month, date }: CalendarSearch,
+  todayKey: string,
+) => {
+  const monthKey = month ?? toMonthKey(date ?? todayKey);
+  const selectedDate =
+    date && toMonthKey(date) === monthKey
+      ? date
+      : getDefaultDateInMonth(monthKey, todayKey);
+  return { monthKey, selectedDate };
+};

@@ -30,6 +30,8 @@ const dayNumberVariants = cva(
 
 interface CalendarDayProps {
   day: number;
+  //* 이웃 달 날짜가 같은 숫자와 구분되도록 월이 들어간 전체 날짜 (예: '10월 1일 목요일')
+  dateLabel: string;
   //* 원 단위 0 이상 정수. 0 이거나 없으면 그 줄을 표시하지 않는다
   income?: number;
   expense?: number;
@@ -39,9 +41,9 @@ interface CalendarDayProps {
   onSelect?: () => void;
 }
 
-const buildLabel = (day: number, income: number, expense: number) =>
+const buildLabel = (dateLabel: string, income: number, expense: number) =>
   [
-    `${day}일`,
+    dateLabel,
     income > 0 && `입금 ${formatAmount(income)}`,
     expense > 0 && `지출 ${formatAmount(expense)}`,
   ]
@@ -51,6 +53,7 @@ const buildLabel = (day: number, income: number, expense: number) =>
 //* 셀 H64 · 날짜 28 · 입금 파랑 / 지출 회색
 export const CalendarDay = ({
   day,
+  dateLabel,
   income = 0,
   expense = 0,
   selected = false,
@@ -64,7 +67,7 @@ export const CalendarDay = ({
   return (
     <button
       type="button"
-      aria-label={buildLabel(day, visibleIncome, visibleExpense)}
+      aria-label={buildLabel(dateLabel, visibleIncome, visibleExpense)}
       aria-pressed={selected}
       aria-current={today ? 'date' : undefined}
       onClick={onSelect}

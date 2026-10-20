@@ -39,28 +39,30 @@ describe('MonthCalendar', () => {
 
     expect(
       screen.getByRole('button', {
-        name: '15일, 입금 3,420,000원, 지출 70,500원',
+        name: '9월 15일 화요일, 입금 3,420,000원, 지출 70,500원',
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: '14일, 지출 154,500원' }),
+      screen.getByRole('button', { name: '9월 14일 월요일, 지출 154,500원' }),
     ).toBeInTheDocument();
   });
 
   it('거래 없는 날은 금액 없이 날짜만 보여준다', () => {
     renderCalendar();
 
-    expect(screen.getByRole('button', { name: '16일' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: '9월 16일 수요일' }),
+    ).toBeInTheDocument();
   });
 
   it('선택한 날짜와 오늘을 표시한다', () => {
     renderCalendar({ selectedDate: '2026-09-14' });
 
-    expect(screen.getByRole('button', { name: /^14일/ })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: /^9월 14일/ })).toHaveAttribute(
       'aria-pressed',
       'true',
     );
-    expect(screen.getByRole('button', { name: /^15일/ })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: /^9월 15일/ })).toHaveAttribute(
       'aria-current',
       'date',
     );
@@ -70,7 +72,7 @@ describe('MonthCalendar', () => {
     const user = userEvent.setup();
     const { onSelectDate } = renderCalendar();
 
-    await user.click(screen.getByRole('button', { name: /^14일/ }));
+    await user.click(screen.getByRole('button', { name: /^9월 14일/ }));
 
     expect(onSelectDate).toHaveBeenCalledWith('2026-09-14');
   });
@@ -80,14 +82,22 @@ describe('MonthCalendar', () => {
     const { onSelectDate } = renderCalendar();
 
     //* 2026-09 그리드의 첫 주는 8/30, 8/31 로 시작하고 마지막 주는 10/1~10/3 으로 끝난다
-    await user.click(screen.getByRole('button', { name: '31일' }));
-    //* 3일은 9/3 과 10/3 두 개라 마지막 것이 10/3 이다
-    await user.click(
-      screen.getAllByRole('button', { name: '3일' }).at(-1) as HTMLElement,
-    );
+    await user.click(screen.getByRole('button', { name: '8월 31일 월요일' }));
+    await user.click(screen.getByRole('button', { name: '10월 3일 토요일' }));
 
     expect(onSelectDate).toHaveBeenNthCalledWith(1, '2026-08-31');
     expect(onSelectDate).toHaveBeenNthCalledWith(2, '2026-10-03');
+  });
+
+  it('이웃 달 날짜는 월이 포함된 이름이라 같은 숫자의 날짜와 구분된다', () => {
+    renderCalendar();
+
+    expect(
+      screen.getByRole('button', { name: '9월 1일 화요일' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: '10월 1일 목요일' }),
+    ).toBeInTheDocument();
   });
 
   it('이웃 달 날짜에는 금액을 보여주지 않는다', () => {

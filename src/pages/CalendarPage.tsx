@@ -6,7 +6,12 @@ import { MonthNavigator } from '@/components/molecules/MonthNavigator';
 import { ScreenHeader } from '@/components/molecules/ScreenHeader';
 import { DayTransactions } from '@/components/organisms/DayTransactions';
 import { MonthCalendar } from '@/components/organisms/MonthCalendar';
-import { buildDateKey, getTodayKey, toMonthKey } from '@/lib/date';
+import {
+  getDefaultDateInMonth,
+  getTodayKey,
+  resolveCalendarSelection,
+  toMonthKey,
+} from '@/lib/date';
 import {
   filterByDateRange,
   filterByMonth,
@@ -15,22 +20,13 @@ import {
 } from '@/lib/transactions';
 import { transactionsQuery } from '@/queries/transactionQueries';
 
-//* 월을 옮기면 그 달에 오늘이 있을 때 오늘, 없으면 1일을 고른다
-const getDefaultDate = (monthKey: string, todayKey: string) =>
-  toMonthKey(todayKey) === monthKey ? todayKey : buildDateKey(monthKey, 1);
-
 export const CalendarPage = () => {
   const search = useSearch({ from: '/calendar' });
   const navigate = useNavigate();
   const { data: transactions = [] } = useQuery(transactionsQuery());
 
   const todayKey = getTodayKey();
-  const monthKey = search.month ?? toMonthKey(todayKey);
-  //* date 가 표시 중인 달 밖이면 URL 이 어긋난 것이라 기본 날짜로 대신한다
-  const selectedDate =
-    search.date && toMonthKey(search.date) === monthKey
-      ? search.date
-      : getDefaultDate(monthKey, todayKey);
+  const { monthKey, selectedDate } = resolveCalendarSelection(search, todayKey);
 
   const monthTransactions = filterByMonth(transactions, monthKey);
   const { income, expense } = summarize(monthTransactions);
@@ -54,7 +50,7 @@ export const CalendarPage = () => {
           <MonthNavigator
             monthKey={monthKey}
             onMonthChange={(month) =>
-              goTo(month, getDefaultDate(month, todayKey))
+              goTo(month, getDefaultDateInMonth(month, todayKey))
             }
           >
             <button

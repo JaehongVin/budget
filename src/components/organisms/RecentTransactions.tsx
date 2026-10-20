@@ -1,8 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
 import { Icon } from '@/components/atoms/Icon';
-import { TransactionRow } from '@/components/molecules/TransactionRow';
-import { getCategoryIcon } from '@/lib/categoryIcon';
+import { TransactionItem } from '@/components/molecules/TransactionItem';
 import type { Transaction } from '@/types/transaction';
 
 interface RecentTransactionsProps {
@@ -33,19 +32,11 @@ export const RecentTransactions = ({
       </p>
     ) : (
       <ul>
-        {transactions.map(
-          ({ id, type, title, category, paymentMethod, amount }) => (
-            <li key={id}>
-              <TransactionRow
-                type={type}
-                title={title}
-                description={`${category} · ${paymentMethod}`}
-                amount={amount}
-                icon={getCategoryIcon(category)}
-              />
-            </li>
-          ),
-        )}
+        {transactions.map((transaction) => (
+          <li key={transaction.id}>
+            <TransactionItem transaction={transaction} />
+          </li>
+        ))}
       </ul>
     )}
   </section>

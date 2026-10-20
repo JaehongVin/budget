@@ -37,7 +37,7 @@ e2e/                  # Playwright 스펙
 | 단계 | 기준 | 예 |
 |---|---|---|
 | atoms | 다른 컴포넌트를 쓰지 않는 최소 단위. 더 쪼개면 의미가 없다 | `Button`, `Chip`, `ProgressBar`, `Icon` |
-| molecules | atom 몇 개가 모여 **한 가지 일**을 한다 | `FilterChipGroup`, `TransactionRow`, `CalendarDay`, `BudgetFeedback`, `ScreenHeader`, `MonthNavigator`, `IncomeExpenseSummary`, `InsightBanner` |
+| molecules | atom 몇 개가 모여 **한 가지 일**을 한다 | `FilterChipGroup`, `TransactionRow`, `TransactionItem`, `CalendarDay`, `BudgetFeedback`, `ScreenHeader`, `MonthNavigator`, `IncomeExpenseSummary`, `InsightBanner` |
 | organisms | molecule·atom 이 모여 **화면에서 독립된 한 구역**이 된다 | `BudgetProgressCard`, `BottomNav`, `BalanceCard`, `MonthCalendar`, `TransactionGroupList` |
 | templates | 화면 골격. 데이터 없이 배치만 | `AppShell` (본문 + 하단 탭) |
 | pages | 라우트에 붙는 화면. 데이터를 읽어 molecule·organism 에 넘긴다 | `HomePage`, `CalendarPage`, `HistoryPage` |

@@ -52,9 +52,13 @@ describe('TransactionGroupList', () => {
       />,
     );
 
-    expect(screen.getByText('9월 15일 화요일 · 오늘')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: '9월 15일 화요일 · 오늘' }),
+    ).toBeInTheDocument();
     expect(screen.getByText('2건')).toBeInTheDocument();
-    expect(screen.getByText('9월 14일 월요일')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 2, name: '9월 14일 월요일' }),
+    ).toBeInTheDocument();
     expect(screen.getByText('1건')).toBeInTheDocument();
   });
 
@@ -68,6 +72,7 @@ describe('TransactionGroupList', () => {
     );
 
     const group = screen.getByRole('region', { name: /9월 15일 화요일/ });
+    expect(within(group).getAllByRole('listitem')).toHaveLength(2);
     expect(within(group).getByText('스타벅스')).toBeInTheDocument();
     expect(within(group).getByText('카페 · 신한카드')).toBeInTheDocument();
     expect(within(group).getByText('−5,500원')).toBeInTheDocument();

@@ -4,6 +4,7 @@ import {
   formatMonthTitle,
   getDayOfMonth,
   getDaysInMonth,
+  getDefaultDateInMonth,
   getMonthGrid,
   getMonthNumber,
   getMonthToDateRange,
@@ -11,6 +12,7 @@ import {
   getTodayKey,
   isValidDateKey,
   isValidMonthKey,
+  resolveCalendarSelection,
   shiftMonth,
   toDateKey,
   toMonthKey,
@@ -248,5 +250,59 @@ describe('연도 0~99 도 1900 년대로 바뀌지 않는다 (Date.UTC 회피)',
 
   it('0100년 1월 그리드는 0100 년 날짜로 채운다', () => {
     expect(getMonthGrid('0100-01').flat()).toContain('0100-01-31');
+  });
+});
+
+describe('getDefaultDateInMonth', () => {
+  it('그 달에 오늘이 있으면 오늘이다', () => {
+    expect(getDefaultDateInMonth('2026-09', '2026-09-15')).toBe('2026-09-15');
+  });
+
+  it('그 달에 오늘이 없으면 1일이다', () => {
+    expect(getDefaultDateInMonth('2026-08', '2026-09-15')).toBe('2026-08-01');
+  });
+});
+
+describe('resolveCalendarSelection', () => {
+  const TODAY = '2026-09-15';
+
+  it('month 만 있고 이번 달이면 오늘을 선택한다', () => {
+    expect(resolveCalendarSelection({ month: '2026-09' }, TODAY)).toEqual({
+      monthKey: '2026-09',
+      selectedDate: '2026-09-15',
+    });
+  });
+
+  it('month 만 있고 다른 달이면 그 달 1일을 선택한다', () => {
+    expect(resolveCalendarSelection({ month: '2026-08' }, TODAY)).toEqual({
+      monthKey: '2026-08',
+      selectedDate: '2026-08-01',
+    });
+  });
+
+  it('date 만 있으면 그 날짜의 달을 표시하고 그 날짜를 선택한다', () => {
+    expect(resolveCalendarSelection({ date: '2026-08-05' }, TODAY)).toEqual({
+      monthKey: '2026-08',
+      selectedDate: '2026-08-05',
+    });
+  });
+
+  it('month 와 date 가 맞으면 그대로 쓴다', () => {
+    expect(
+      resolveCalendarSelection({ month: '2026-08', date: '2026-08-05' }, TODAY),
+    ).toEqual({ monthKey: '2026-08', selectedDate: '2026-08-05' });
+  });
+
+  it('date 가 month 밖이면 month 를 따르고 그 달의 기본 날짜로 대신한다', () => {
+    expect(
+      resolveCalendarSelection({ month: '2026-08', date: '2026-09-15' }, TODAY),
+    ).toEqual({ monthKey: '2026-08', selectedDate: '2026-08-01' });
+  });
+
+  it('둘 다 없으면 이번 달의 오늘이다', () => {
+    expect(resolveCalendarSelection({}, TODAY)).toEqual({
+      monthKey: '2026-09',
+      selectedDate: '2026-09-15',
+    });
   });
 });
