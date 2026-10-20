@@ -56,6 +56,13 @@ Tailwind 기본 팔레트·글자 크기·라운드는 `initial` 로 지웠다. 
 | `ScreenHeader` | molecules | App header | `title`(h1), `icon`, `iconLabel`(aria-label), `onIconClick?`. H66 · 좌우 24. 아이콘 버튼은 터치 타깃 44 |
 | `MonthNavigator` | molecules | Month controls | `monthKey`(`YYYY-MM`), `onMonthChange`, `children`(오른쪽 슬롯). 이전/다음 달 버튼(aria-label `이전 달`·`다음 달`)이 `shiftMonth` 로 월 키를 만들어 넘긴다 |
 | `IncomeExpenseSummary` | molecules | Monthly totals | `income`, `expense`. 총 입금(파랑 19/700) \| 구분선 \| 총 지출. 홈 카드·캘린더·내역이 같은 수치라 공통이다 |
+| `InsightBanner` | molecules | 홈 Insight banner | `changePercent`(정수 % 또는 `null`). 덜 씀 `accent-subtle` / 더 씀 `negative-subtle` / 같음(0%)·비교 불가(`null`) `surface-subtle`. 더 씀·같음·비교 불가 문구는 Figma 에 없어 앱에서 정했다 |
+| `BalanceCard` | organisms | 홈 Monthly balance card | `monthNumber`, `balance`(음수 가능), `income`, `expense`. ⋯ 버튼(aria-label `더보기`)은 동작 없음 |
+| `RecentTransactions` | organisms | 홈 Recent transactions | `transactions`. "전체 보기"는 `/history` 링크. 비면 "아직 내역이 없어요" |
+| `MonthlySummaryCard` | organisms | 내역 Monthly summary | `income`, `expense`, `balance`(음수 가능). `IncomeExpenseSummary` + 남은 돈 행. 필터와 상관없이 그 달 전체 합계를 넘긴다 |
+| `TransactionGroupList` | organisms | 내역 Transaction list | `groups`(`groupByDate` 결과), `todayKey`, `emptyMessage`. 날짜별 `section`(머리 "9월 15일 화요일" + 오늘이면 " · 오늘", 건수) |
+| `MonthCalendar` | organisms | 캘린더 Month grid | `monthKey`, `selectedDate`, `todayKey`, `dailyTotals`(`getDailyTotals` 결과), `onSelectDate(dateKey)`. 요일 머리 + `getMonthGrid` 그리드를 `table` 로 그리고 칸은 `CalendarDay`. 다른 달 날짜를 누르면 그 날짜 키를 그대로 넘기고, 월 이동은 페이지가 한다 |
+| `DayTransactions` | organisms | 캘린더 Selected day | `dateKey`, `isToday`, `transactions`. 제목 + 오늘 배지 + 건수, 입금·지출 요약, 처음 2건만 보이고 "내역 N건 더 보기"로 펼친다. 비면 "이 날은 내역이 없어요" |
 | `AppShell` | templates | (화면 골격) | `children`. `<main>` + 하단 sticky `BottomNav`, 폭 `max-w-390` |
 
 - 금액 props 는 전부 **원 단위 0 이상 정수**다. 방향(입금/지출)은 `type`·`sign` 으로 넘긴다. 남은 돈처럼 음수가 될 수 있는 값은 `formatBalance` 로 포맷한다 (`−292,500원`, 마이너스 기호 U+2212)
