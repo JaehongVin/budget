@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderRoute } from '@/test/renderRoute';
 
@@ -8,7 +8,7 @@ describe('BottomNav', () => {
 
     const nav = await screen.findByRole('navigation', { name: '주요 메뉴' });
     expect(nav).toBeInTheDocument();
-    expect(screen.getAllByRole('link')).toHaveLength(3);
+    expect(within(nav).getAllByRole('link')).toHaveLength(3);
   });
 
   it('현재 경로의 탭에만 aria-current="page" 가 붙는다', async () => {
